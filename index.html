@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dojo BioKempo - Kempo Karate Chile | Entrenamiento Presencial y Online</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-fist-raised"></i>
+                    <span>DOJO BIOKEMPO</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#inicio" class="nav-link">Inicio</a></li>
+                    <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
+                    <li><a href="#maestros" class="nav-link">Maestros</a></li>
+                    <li><a href="#galeria" class="nav-link">Galería</a></li>
+                    <li><a href="#clases" class="nav-link">Clases</a></li>
+                    <li><a href="#torneos" class="nav-link">Torneos</a></li>
+                    <li><a href="#ceremonias" class="nav-link">Ceremonias</a></li>
+                    <li><a href="#contacto" class="nav-link">Contacto</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">DOJO BIOKEMPO <span class="highlight">KEMPO KARATE</span></h1>
+                <p class="hero-subtitle">Tradición, excelencia y formación de campeones nacionales. Entrena con la familia más destacada del Kempo en Chile</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="contactWhatsApp('¡Hola! Me interesa comenzar mi entrenamiento en el Dojo Valenzuela. ¿Podrían darme más información sobre las clases disponibles?')">Comenzar Entrenamiento</button>
+                    <button class="btn btn-secondary" onclick="scrollToSection('nosotros')">Conocer Más</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="martial-arts-icon">
+                    <i class="fas fa-fist-raised"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nosotros Section -->
+    <section id="nosotros" class="about">
+        <div class="container">
+            <h2 class="section-title">Sobre Nuestro Dojo</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>La Tradición Valenzuela en el Kempo Karate</h3>
+                    <p>El Dojo Valenzuela representa décadas de excelencia en el Kempo Karate chileno. Nuestra familia ha sido pionera en el desarrollo y perfeccionamiento de las artes marciales en Chile, formando campeones nacionales y transmitiendo los valores fundamentales del Kempo.</p>
+                    
+                    <div class="specialties">
+                        <div class="specialty-item">
+                            <i class="fas fa-medal"></i>
+                            <div>
+                                <h4>Kempo Karate Tradicional</h4>
+                                <p>Enseñanza auténtica del Kempo con técnicas tradicionales y filosofía marcial profunda.</p>
+                            </div>
+                        </div>
+                        <div class="specialty-item">
+                            <i class="fas fa-dumbbell"></i>
+                            <div>
+                                <h4>Entrenamiento Funcional</h4>
+                                <p>Preparación física adaptada específicamente al Kempo y al combate moderno.</p>
+                            </div>
+                        </div>
+                        <div class="specialty-item">
+                            <i class="fas fa-trophy"></i>
+                            <div>
+                                <h4>Formación de Campeones</h4>
+                                <p>Preparación de alumnos seleccionados para competencias nacionales e internacionales.</p>
+                            </div>
+                        </div>
+                        <div class="specialty-item">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <h4>Experiencia Familiar</h4>
+                                <p>Más de 30 años de trayectoria de la familia Valenzuela en el Kempo chileno.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">30+</div>
+                        <div class="stat-label">Años de Experiencia</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Alumnos Formados</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Campeones Nacionales</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Títulos Internacionales</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Maestros Section -->
+    <section id="maestros" class="masters">
+        <div class="container">
+            <h2 class="section-title">Nuestros Maestros</h2>
+            <p class="section-subtitle">Conoce a los expertos que guiarán tu camino en el Kempo Karate</p>
+            
+            <div class="masters-grid">
+                <!-- Maestro Principal -->
+                <div class="master-card featured-master">
+                    <div class="master-image">
+                        <img src="/placeholder.svg?height=300&width=250" alt="Maestro Juan Valenzuela">
+                        <div class="master-rank">
+                            <i class="fas fa-star"></i>
+                            <span>Maestro Principal</span>
+                        </div>
+                    </div>
+                    <div class="master-info">
+                        <h3>Maestro Juan Valenzuela Jr</h3>
+                        <p class="master-title">Fundador y Director del Dojo</p>
+                        <div class="master-belt">
+                            <i class="fas fa-medal"></i>
+                            <span>5° Dan Cinturón Negro</span>
+                        </div>
+                        
+                        <div class="master-achievements">
+                            <h4>Trayectoria Destacada:</h4>
+                            <ul>
+                                <li><i class="fas fa-trophy"></i> Campeón Nacional de Kempo (2000-2xxx)</li>
+                                <li><i class="fas fa-globe"></i> Representante de Chile en 2 mundiales</li>
+                                <li><i class="fas fa-graduation-cap"></i> Más de 15 años enseñando</li>
+                                <li><i class="fas fa-users"></i> Formador de 15 campeones nacionales</li>
+                                <li><i class="fas fa-certificate"></i> Certificado por la Federación Mundial de Kempo</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="master-philosophy">
+                            <p><em>"El Kempo no es solo técnica, es disciplina, respeto y superación personal. Cada alumno es único y merece una enseñanza personalizada."</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maestra Asociada -->
+                <div class="master-card">
+                    <div class="master-image">
+                        <img src="/placeholder.svg?height=300&width=250" alt="Maestro John Valenzuela">
+                        <div class="master-rank">
+                            <i class="fas fa-star"></i>
+                            <span>Maestro Asociado</span>
+                        </div>
+                    </div>
+                    <div class="master-info">
+                        <h3>Maestro John Valenzuela</h3>
+                        <p class="master-title">Especialista en Combate,Jiujitsu y Técnicas Tradicionales</p>
+                        <div class="master-belt">
+                            <i class="fas fa-medal"></i>
+                            <span>Cinturón Negro</span>
+                        </div>
+                        
+                        <div class="master-achievements">
+                            <h4>Especialidades:</h4>
+                            <ul>
+                                <li><i class="fas fa-yin-yang"></i> Katas tradicionales y modernas</li>
+                                <li><i class="fas fa-heart"></i> Entrenamiento para niños , jóvenes y adultos</li>
+                                <li><i class="fas fa-trophy"></i> x veces campeon nacional de combate</li>
+                                <li><i class="fas fa-teaching"></i> 5 años de experiencia docente</li>
+                                <li><i class="fas fa-female"></i> Pionero del Kempo  en Chile</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="master-philosophy">
+                            <p><em>"La precisión y la gracia en cada movimiento reflejan el alma del Kempo. Enseño a mis alumnos a encontrar su equilibrio interior."</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+
+            <!-- Certificaciones del Dojo -->
+            <div class="dojo-certifications">
+                <h3>Certificaciones y Reconocimientos</h3>
+                <div class="certifications-grid">
+                    <div class="certification-item">
+                        <i class="fas fa-certificate"></i>
+                        <div>
+                            <h4>Federación Mundial de Kempo</h4>
+                            <p>Dojo oficialmente reconocido y certificado</p>
+                        </div>
+                    </div>
+                    <div class="certification-item">
+                        <i class="fas fa-award"></i>
+                        <div>
+                            <h4>Asociación Chilena de Artes Marciales</h4>
+                            <p>Miembro fundador y activo desde 1990</p>
+                        </div>
+                    </div>
+                    <div class="certification-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <h4>Registro Nacional de Deportes</h4>
+                            <p>Institución deportiva registrada oficialmente</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería Section -->
+    <section id="galeria" class="gallery">
+        <div class="container">
+            <h2 class="section-title">Nuestra Galería</h2>
+            <p class="section-subtitle">Conoce nuestras instalaciones, alumnos y momentos especiales</p>
+            
+            <!-- Filtros de Galería -->
+            <div class="gallery-filters">
+                <button class="filter-btn active" data-filter="all">Todas</button>
+                <button class="filter-btn" data-filter="dojo">Instalaciones</button>
+                <button class="filter-btn" data-filter="students">Alumnos</button>
+                <button class="filter-btn" data-filter="training">Entrenamientos</button>
+                <button class="filter-btn" data-filter="competitions">Competencias</button>
+                <button class="filter-btn" data-filter="ceremonies">Ceremonias</button>
+            </div>
+
+            <!-- Grid de Imágenes -->
+            <div class="gallery-grid">
+                <!-- Instalaciones del Dojo -->
+                <div class="gallery-item" data-category="dojo">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Interior del Dojo Principal">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Dojo Principal</h4>
+                            <p>Amplio espacio de entrenamiento con tatami profesional</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="dojo">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Área de Equipamiento">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Área de Equipamiento</h4>
+                            <p>Sacos, makiwaras y equipos de entrenamiento profesional</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="dojo">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Área de Recepción">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Recepción y Descanso</h4>
+                            <p>Espacio cómodo para padres y visitantes</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Alumnos -->
+                <div class="gallery-item" data-category="students">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Clase Infantil">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Clase Infantil</h4>
+                            <p>Nuestros pequeños guerreros en acción</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="students">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Clase Juvenil">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Clase Juvenil</h4>
+                            <p>Adolescentes desarrollando disciplina y técnica</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="students">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Clase de Adultos">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Clase de Adultos</h4>
+                            <p>Entrenamiento intensivo para adultos</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Entrenamientos -->
+                <div class="gallery-item" data-category="training">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Práctica de Kata">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Práctica de Kata</h4>
+                            <p>Perfeccionando las formas tradicionales</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="training">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Sesión de Sparring">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Sesión de Sparring</h4>
+                            <p>Combate controlado y técnico</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="training">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Entrenamiento con Armas">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Entrenamiento con Armas</h4>
+                            <p>Técnicas tradicionales con armas del Kempo</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Competencias -->
+                <div class="gallery-item" data-category="competitions">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Campeonato Nacional">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Campeonato Nacional</h4>
+                            <p>Nuestros alumnos compitiendo al más alto nivel</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="competitions">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Podium de Ganadores">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Podium de Ganadores</h4>
+                            <p>Celebrando los logros de nuestros campeones</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ceremonias -->
+                <div class="gallery-item" data-category="ceremonies">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Ceremonia de Graduación">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Ceremonia de Graduación y seminarios</h4>
+                            <p>Momento especial de reconocimiento y progreso</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="ceremonies">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Entrega de Cinturón Negro">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h4>Entrega de Cinturón Negro</h4>
+                            <p>El momento más importante en la vida de un karateka</p>
+                        </div>
+                        <button class="gallery-zoom" onclick="openImageModal(this)">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Modal para Imágenes -->
+    <div id="imageModal" class="image-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeImageModal()">&times;</span>
+            <img id="modalImage" src="/placeholder.svg" alt="">
+            <div class="modal-info">
+                <h4 id="modalTitle"></h4>
+                <p id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clases Section -->
+    <section id="clases" class="classes">
+        <div class="container">
+            <h2 class="section-title">Nuestras Modalidades de Entrenamiento</h2>
+            <div class="classes-grid">
+                <!-- Clases Presenciales -->
+                <div class="class-card featured">
+                    <div class="featured-badge">Más Popular</div>
+                    <div class="class-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Clases Presenciales</h3>
+                    <p>Entrena en nuestro dojo con la supervisión directa de los maestros Valenzuela. Experiencia completa de formación marcial.</p>
+                    <ul class="class-features">
+                        <li>Entrenamiento grupal motivador</li>
+                        <li>Corrección técnica personalizada</li>
+                        <li>Ambiente tradicional del dojo</li>
+                        <li>Sparring y práctica con compañeros</li>
+                        <li>Acceso a equipamiento profesional</li>
+                    </ul>
+                    <div class="class-schedule">
+                        <h4>Horarios Disponibles:</h4>
+                        <p>Lun-Vie: 18:00 - 21:00<br>Sábados: 09:00 - 12:00</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="contactWhatsApp('¡Hola! Me interesa inscribirme en las Clases Presenciales del Dojo Valenzuela. ¿Podrían darme información sobre horarios y disponibilidad para una clase de prueba?')">Inscribirme Ahora</button>
+                </div>
+
+                <!-- Clases Personalizadas -->
+                <div class="class-card">
+                    <div class="class-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>Clases Personalizadas</h3>
+                    <p>Entrenamiento individual adaptado a tus objetivos específicos. Ideal para competidores y perfeccionamiento técnico.</p>
+                    <ul class="class-features">
+                        <li>Atención 100% personalizada</li>
+                        <li>Programa adaptado a tus metas</li>
+                        <li>Horarios flexibles</li>
+                        <li>Progreso acelerado</li>
+                        <li>Preparación para competencias</li>
+                    </ul>
+                    <div class="class-schedule">
+                        <h4>Modalidades:</h4>
+                        <p>Presencial o Online<br>Horarios coordinados</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="contactWhatsApp('¡Hola! Me interesa tomar Clases Personalizadas en el Dojo Valenzuela. ¿Podrían darme información sobre disponibilidad, horarios y tarifas?')">Consultar Disponibilidad</button>
+                </div>
+
+                <!-- Clases Online -->
+                <div class="class-card">
+                    <div class="class-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <h3>Clases Online</h3>
+                    <p>Entrena desde cualquier lugar con nuestras clases virtuales en vivo. Mantén tu disciplina sin importar la distancia.</p>
+                    <ul class="class-features">
+                        <li>Clases en vivo interactivas</li>
+                        <li>Acceso desde cualquier lugar</li>
+                        <li>Grabaciones para repasar</li>
+                        <li>Seguimiento personalizado</li>
+                        <li>Comunidad virtual activa</li>
+                    </ul>
+                    <div class="class-schedule">
+                        <h4>Horarios Online:</h4>
+                        <p>Mar-Jue: 19:00 - 20:00<br>Sábados: 10:00 - 11:00</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="contactWhatsApp('¡Hola! Me interesa probar las Clases Online del Dojo Valenzuela. ¿Podrían darme información sobre cómo funciona y si hay una clase de prueba gratuita?')">Probar Clase Gratis</button>
+                </div>
+            </div>
+            
+            <!-- Call to Action -->
+            <div class="cta-section">
+                <h3>¿Listo para comenzar tu transformación?</h3>
+                <p>Únete a la tradición Valenzuela y descubre tu potencial en el Kempo Karate</p>
+                <button class="btn btn-primary btn-large" onclick="contactWhatsApp('¡Hola! Estoy listo para comenzar mi transformación en el Dojo Valenzuela. ¿Podrían ayudarme a elegir la mejor modalidad de entrenamiento para mí?')">Contactar Ahora</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Torneos Section -->
+    <section id="torneos" class="tournaments">
+        <div class="container">
+            <h2 class="section-title">Próximos Torneos y Competencias</h2>
+            <div class="tournaments-grid">
+                <!-- Torneo 1 -->
+                <div class="tournament-card">
+                    <div class="tournament-date">
+                        <span class="day">15</span>
+                        <span class="month">MAR</span>
+                    </div>
+                    <div class="tournament-info">
+                        <h3>Campeonato Nacional de Kempo</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Centro Deportivo Nacional, Santiago</p>
+                        <p><i class="fas fa-clock"></i> 09:00 - 18:00</p>
+                        <div class="tournament-categories">
+                            <span class="category">Juvenil</span>
+                            <span class="category">Adulto</span>
+                            <span class="category">Senior</span>
+                        </div>
+                        <p class="tournament-note"><strong>Nuestros alumnos participarán representando al Dojo BioKempo</strong></p>
+                    </div>
+                </div>
+
+                <!-- Torneo 2 -->
+                <div class="tournament-card">
+                    <div class="tournament-date">
+                        <span class="day">22</span>
+                        <span class="month">ABR</span>
+                    </div>
+                    <div class="tournament-info">
+                        <h3>Copa Sudamericana de Artes Marciales</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Polideportivo Regional, Valparaíso</p>
+                        <p><i class="fas fa-clock"></i> 10:00 - 16:00</p>
+                        <div class="tournament-categories">
+                            <span class="category">Kata</span>
+                            <span class="category">Kumite</span>
+                            <span class="category">Defensa Personal</span>
+                        </div>
+                        <p class="tournament-note"><strong>Selección de alumnos avanzados del dojo</strong></p>
+                    </div>
+                </div>
+
+                <!-- Torneo 3 -->
+                <div class="tournament-card">
+                    <div class="tournament-date">
+                        <span class="day">10</span>
+                        <span class="month">MAY</span>
+                    </div>
+                    <div class="tournament-info">
+                        <h3>Torneo Interescolar Valenzuela</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Dojo BioKempo, La Serena</p>
+                        <p><i class="fas fa-clock"></i> 08:00 - 17:00</p>
+                        <div class="tournament-categories">
+                            <span class="category">Principiantes</span>
+                            <span class="category">Intermedios</span>
+                        </div>
+                        <p class="tournament-note"><strong>Torneo interno para todos los niveles</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ceremonias Section -->
+    <section id="ceremonias" class="ceremonies">
+        <div class="container">
+            <h2 class="section-title">Ceremonias , Graduaciones y Seminarios</h2>
+            <div class="ceremonies-content">
+                <div class="ceremony-info">
+                    <h3>Próxima Ceremonia de Graduación</h3>
+                    <div class="ceremony-details">
+                        <div class="detail-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>Sábado 28 de Marzo, 2024</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-clock"></i>
+                            <span>17:00 - 20:00</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Dojo Valenzuela - Salón Principal</span>
+                        </div>
+                    </div>
+                    <div class="belt-levels">
+                        <h4>Sistema de Graduación Tradicional:</h4>
+                        <div class="belts">
+                            <div class="belt white">Cinturón Blanco</div>
+                            <div class="belt yellow">Cinturón Amarillo</div>
+                            <div class="belt orange">Cinturón Naranja</div>
+                            <div class="belt green">Cinturón Verde</div>
+                            <div class="belt blue">Cinturón Azul</div>
+                            <div class="belt brown">Cinturón Marrón</div>
+                            <div class="belt black">Cinturón Negro</div>
+                        </div>
+                    </div>
+                    <div class="ceremony-tradition">
+                        <strong>Tradición Familiar:</strong> Cada graduación es presidida por los maestros de la familia Valenzuela, 
+                        manteniendo la autenticidad y el rigor tradicional del Kempo Karate.
+                    </div>
+                    <button class="btn btn-primary" onclick="contactWhatsApp('¡Hola! Me interesa confirmar mi asistencia a la próxima ceremonia de graduación del Dojo Valenzuela. ¿Podrían darme más detalles sobre el evento?')">Confirmar mi Asistencia</button>
+                </div>
+                <div class="ceremony-image">
+                    <div class="ceremony-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contacto" class="contact">
+        <div class="container">
+            <h2 class="section-title">Contacto</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Dojo Principal</h4>
+                            <p>La Serena<br>IV REGION, Chile</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Teléfono</h4>
+                            <p>+56 9 8765 4321</p>
+                            <a href="tel:+56987654321" class="btn btn-outline btn-small">Llamar Ahora</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <div>
+                            <h4>WhatsApp</h4>
+                            <p>+56 9 8765 4321</p>
+                            <button class="btn btn-whatsapp btn-small" onclick="contactWhatsApp('¡Hola! Me gustaría obtener más información sobre el Dojo Valenzuela y las clases disponibles.')">
+                                <i class="fab fa-whatsapp"></i> Escribir por WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>info@dojovalenzuela.cl</p>
+                            <a href="mailto:info@BioKempo.cl" class="btn btn-outline btn-small">Enviar Email</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Horarios de Atención</h4>
+                            <p>Lun - Vie: 16:00 - 22:00<br>Sáb: 09:00 - 14:00<br>Dom: Solo citas</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Inscription CTA -->
+                <div class="inscription-cta">
+                    <div class="cta-content">
+                        <h3>¡Inscríbete Ahora!</h3>
+                        <p>Únete a la tradición Valenzuela y comienza tu transformación en el Kempo Karate</p>
+                        <div class="cta-features">
+                            <div class="feature">
+                                <i class="fas fa-gift"></i>
+                                <span>Clase de prueba gratuita</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-users"></i>
+                                <span>Grupos reducidos</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-medal"></i>
+                                <span>Instructores certificados</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-large" onclick="contactWhatsApp('¡Hola! Quiero inscribirme en el Dojo BioKempo. ¿Podrían ayudarme con el proceso de inscripción y darme información sobre las modalidades disponibles?')">
+                            <i class="fab fa-whatsapp"></i> Inscribirme por WhatsApp
+                        </button>
+                        
+                        <!-- Social Media -->
+                        <div class="social-section">
+                            <h4>Síguenos en Redes Sociales</h4>
+                            <div class="social-links">
+                                <a href="https://www.facebook.com/BioKempo" target="_blank" class="social-link facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                    <span>Facebook</span>
+                                </a>
+                                <a href="https://www.instagram.com/BioKempo" target="_blank" class="social-link instagram">
+                                    <i class="fab fa-instagram"></i>
+                                    <span>Instagram</span>
+                                </a>
+                                <a href="https://www.youtube.com/BioKempo" target="_blank" class="social-link youtube">
+                                    <i class="fab fa-youtube"></i>
+                                    <span>YouTube</span>
+                                </a>
+                                <a href="https://www.tiktok.com/@BioKempo" target="_blank" class="social-link tiktok">
+                                    <i class="fab fa-tiktok"></i>
+                                    <span>TikTok</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-fist-raised"></i>
+                        <span>DOJO BiOKempo</span>
+                    </div>
+                    <p>Más de 30 años formando campeones y transmitiendo los valores del Kempo Karate en Chile. La tradición familiar que marca la diferencia.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/BioKempo" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/BioKempo" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/BioKempo" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.tiktok.com/@BioKempo" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Modalidades</h4>
+                    <ul>
+                        <li><a href="#clases">Clases Presenciales</a></li>
+                        <li><a href="#clases">Clases Personalizadas</a></li>
+                        <li><a href="#clases">Clases Online</a></li>
+                        <li><a href="#ceremonias">Graduaciones</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul>
+                        <li><a href="#nosotros">Sobre Nosotros</a></li>
+                        <li><a href="#maestros">Maestros</a></li>
+                        <li><a href="#galeria">Galería</a></li>
+                        <li><a href="#torneos">Torneos</a></li>
+                        <li><a href="#ceremonias">Ceremonias</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <ul>
+                        <li>IV REGION, LA SERENA</li>
+                        <li>+56 9 8765 4321</li>
+                        <li>info@BioKempo.cl</li>
+                        <li>www.BioKempo.cl</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Bio Kempo. Todos los derechos reservados. | Tradición familiar en Kempo Karate desde 1990</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <div class="whatsapp-float" onclick="contactWhatsApp('¡Hola! Me interesa conocer más sobre el Dojo Valenzuela y las clases de Kempo Karate. ¿Podrían darme información?')">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-text">¡Chatea con nosotros!</span>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" class="scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>
