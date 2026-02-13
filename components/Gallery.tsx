@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { FaExpand, FaTimes } from 'react-icons/fa';
-import { getGalleryItems, GalleryItem } from '@/lib/dataService';
+import { getGalleryItems, GalleryItem } from '@/lib/galleryService';
 
 import Link from 'next/link';
 import { FaArrowRight } from 'react-icons/fa';
@@ -21,7 +21,11 @@ export default function Gallery() {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
 
   useEffect(() => {
-    setGalleryItems(getGalleryItems().filter(item => item.isFeatured));
+    const fetchGalleryItems = async () => {
+      const data = await getGalleryItems();
+      setGalleryItems(data);
+    };
+    fetchGalleryItems();
   }, []);
 
   return (
@@ -37,7 +41,7 @@ export default function Gallery() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {galleryItems.map(item => (
                 <div key={item.id} className="relative rounded-2xl overflow-hidden shadow-lg group cursor-pointer animate-fadeIn">
-                    <img src={item.imageUrl} alt={item.title} className="w-full h-[300px] object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <img src={item.image_url} alt={item.title} className="w-full h-[300px] object-cover transition-transform duration-300 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
                         <h4 className="text-white text-xl font-bold mb-2">{item.title}</h4>
                         <p className="text-white/90 text-sm">{item.description}</p>

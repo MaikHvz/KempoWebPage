@@ -1,9 +1,9 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { BlogPost, getAllPosts, createPost, updatePost, deletePost } from '@/lib/blogService';
 import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from 'react-icons/fa';
 import Image from 'next/image';
+import ImageUpload from '../ImageUpload';
+import TiptapEditor from './TiptapEditor';
 
 export default function BlogManager() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -113,12 +113,10 @@ export default function BlogManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Contenido (HTML soportado)</label>
-            <textarea
-              value={currentPost.content}
-              onChange={e => setCurrentPost({ ...currentPost, content: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent h-48 font-mono text-sm"
-              required
+            <label className="block text-sm font-bold text-gray-700 mb-2">Contenido</label>
+            <TiptapEditor
+              content={currentPost.content || ''}
+              onChange={value => setCurrentPost({ ...currentPost, content: value })}
             />
           </div>
 
@@ -135,12 +133,11 @@ export default function BlogManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">URL de Imagen</label>
-            <input
-              type="text"
-              value={currentPost.image_url || ''}
-              onChange={e => setCurrentPost({ ...currentPost, image_url: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            <label className="block text-sm font-bold text-gray-700 mb-2">Imagen del Post</label>
+            <ImageUpload
+              currentImageUrl={currentPost.image_url}
+              onImageSelect={(imageUrl) => setCurrentPost({ ...currentPost, image_url: imageUrl })}
+              source="blog"
             />
           </div>
 

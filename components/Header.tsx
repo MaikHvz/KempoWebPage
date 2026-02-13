@@ -31,7 +31,6 @@ export default function Header() {
 
   const navLinks = [
     { name: 'Inicio', href: '/#inicio' },
-    { name: 'Nosotros', href: '/#nosotros' },
     { name: 'Maestros', href: '/#maestros' },
     { name: 'Galería', href: '/#galeria' },
     { name: 'Clases', href: '/#clases' },

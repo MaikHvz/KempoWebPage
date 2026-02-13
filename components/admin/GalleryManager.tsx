@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { GalleryItem, getGalleryItems, createGalleryItem, updateGalleryItem, deleteGalleryItem } from '@/lib/dataService';
+import { GalleryItem, getAllGalleryItems, createGalleryItem, updateGalleryItem, deleteGalleryItem } from '@/lib/galleryService';
 import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave, FaStar } from 'react-icons/fa';
 import Image from 'next/image';
+import ImageUpload from '../ImageUpload';
 
 const CATEGORIES = [
   { id: 'dojo', label: 'Instalaciones' },
@@ -20,12 +21,16 @@ export default function GalleryManager() {
     category: 'dojo',
     title: '',
     description: '',
-    imageUrl: '/placeholder.svg',
-    isFeatured: false
+    image_url: '/placeholder.svg',
+    is_featured: false
   });
 
   useEffect(() => {
-    setItems(getGalleryItems());
+    const fetchGalleryItems = async () => {
+      const data = await getAllGalleryItems();
+      setItems(data);
+    };
+    fetchGalleryItems();
   }, []);
 
   const handleCreate = () => {
@@ -33,9 +38,9 @@ export default function GalleryManager() {
       category: 'dojo',
       title: '',
       description: '',
-    imageUrl: '/placeholder.svg',
-    isFeatured: false
-  });
+      image_url: '/placeholder.svg',
+      is_featured: false
+    });
     setIsEditing(true);
   };
 
@@ -44,28 +49,41 @@ export default function GalleryManager() {
     setIsEditing(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('¿Estás seguro de eliminar esta imagen?')) {
-      deleteGalleryItem(id);
-      setItems(getGalleryItems());
+      const success = await deleteGalleryItem(id);
+      if (success) {
+        const updatedItems = await getAllGalleryItems();
+        setItems(updatedItems);
+      } else {
+        alert('Error al eliminar la imagen');
+      }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentItem.title || !currentItem.imageUrl) {
+    if (!currentItem.title || !currentItem.image_url) {
       alert('Por favor completa los campos obligatorios');
       return;
     }
 
+    let success = false;
     if (currentItem.id) {
-      updateGalleryItem(currentItem.id, currentItem);
+      const result = await updateGalleryItem(currentItem.id, currentItem);
+      success = result !== null;
     } else {
-      createGalleryItem(currentItem as Omit<GalleryItem, 'id'>);
+      const result = await createGalleryItem(currentItem as Omit<GalleryItem, 'id'>);
+      success = result !== null;
     }
 
-    setItems(getGalleryItems());
-    setIsEditing(false);
+    if (success) {
+      const updatedItems = await getAllGalleryItems();
+      setItems(updatedItems);
+      setIsEditing(false);
+    } else {
+      alert('Error al guardar la imagen');
+    }
   };
 
   if (isEditing) {
@@ -118,25 +136,22 @@ export default function GalleryManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">URL de Imagen</label>
-            <input
-              type="text"
-              value={currentItem.imageUrl}
-              onChange={e => setCurrentItem({ ...currentItem, imageUrl: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              required
+            <label className="block text-sm font-bold text-gray-700 mb-2">Imagen</label>
+            <ImageUpload
+              currentImageUrl={currentItem.image_url}
+              onImageSelect={(imageUrl) => setCurrentItem({ ...currentItem, image_url: imageUrl })}
             />
           </div>
 
           <div className="flex items-center">
             <input
               type="checkbox"
-              id="isFeatured"
-              checked={currentItem.isFeatured || false}
-              onChange={e => setCurrentItem({ ...currentItem, isFeatured: e.target.checked })}
+              id="is_featured"
+              checked={currentItem.is_featured || false}
+              onChange={e => setCurrentItem({ ...currentItem, is_featured: e.target.checked })}
               className="h-4 w-4 rounded text-primary focus:ring-primary"
             />
-            <label htmlFor="isFeatured" className="ml-2 block text-sm font-bold text-gray-700">
+            <label htmlFor="is_featured" className="ml-2 block text-sm font-bold text-gray-700">
               Marcar como imagen destacada
             </label>
           </div>
@@ -178,7 +193,7 @@ export default function GalleryManager() {
           <div key={item.id} className="bg-white rounded-xl shadow-md overflow-hidden group">
             <div className="relative h-48 w-full">
               <Image
-                src={item.imageUrl || '/placeholder.svg'}
+                src={item.image_url || '/placeholder.svg'}
                 alt={item.title}
                 fill
                 className="object-cover"
@@ -206,7 +221,7 @@ export default function GalleryManager() {
               </div>
               <h3 className="font-bold text-secondary mb-1 line-clamp-1">{item.title}</h3>
               <p className="text-sm text-gray-500 line-clamp-2">{item.description}</p>
-              {item.isFeatured && (
+              {item.is_featured && (
                 <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-bold">
                   <FaStar /> Destacada
                 </div>

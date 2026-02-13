@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { GalleryItem, getGalleryItems } from '@/lib/dataService';
+import { GalleryItem, getAllGalleryItems } from '@/lib/galleryService';
 import Image from 'next/image';
 import { FaSearch } from 'react-icons/fa';
 
@@ -21,9 +21,12 @@ export default function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
 
   useEffect(() => {
-    const allItems = getGalleryItems();
-    setItems(allItems);
-    setFilteredItems(allItems);
+    const fetchItems = async () => {
+      const data = await getAllGalleryItems();
+      setItems(data);
+      setFilteredItems(data);
+    };
+    fetchItems();
   }, []);
 
   useEffect(() => {
@@ -66,7 +69,7 @@ export default function GalleryPage() {
             >
               <div className="relative h-60 w-full">
                 <Image
-                  src={item.imageUrl || '/placeholder.svg'}
+                  src={item.image_url || '/placeholder.svg'}
                   alt={item.title}
                   fill
                   className="object-cover transform group-hover:scale-105 transition-transform duration-300"
@@ -77,7 +80,9 @@ export default function GalleryPage() {
               </div>
               <div className="p-4">
                 <h3 className="font-bold text-secondary truncate">{item.title}</h3>
-                <p className="text-sm text-gray-500 truncate">{item.description}</p>
+                {item.description && (
+                  <p className="text-sm text-gray-500 truncate">{item.description}</p>
+                )}
               </div>
             </div>
           ))}
@@ -91,7 +96,7 @@ export default function GalleryPage() {
         >
           <div className="relative max-w-3xl max-h-[90vh] w-full" onClick={e => e.stopPropagation()}>
             <Image
-              src={selectedImage.imageUrl || '/placeholder.svg'}
+              src={selectedImage.image_url || '/placeholder.svg'}
               alt={selectedImage.title}
               width={1200}
               height={800}
@@ -99,7 +104,7 @@ export default function GalleryPage() {
             />
             <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white p-4">
               <h3 className="text-xl font-bold">{selectedImage.title}</h3>
-              <p>{selectedImage.description}</p>
+              {selectedImage.description && <p>{selectedImage.description}</p>}
             </div>
             <button
               onClick={() => setSelectedImage(null)}
