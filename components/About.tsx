@@ -81,8 +81,7 @@ export default function About() {
             Sobre Nuestro Dojo
         </h2>
         
-        <div className=" lg:grid-cols-[2fr_1fr]
-">
+        <div className="lg:grid-cols-[2fr_1fr]">
             <div>
                 <h3 className="text-3xl mb-6 text-secondary font-bold">La Tradición Valenzuela en el Kempo Karate</h3>
                 <p className="text-lg text-gray-600 mb-8 leading-relaxed">
