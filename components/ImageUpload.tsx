@@ -14,6 +14,7 @@ interface ImageUploadProps {
 export default function ImageUpload({ currentImageUrl, onImageSelect, className = '', source = 'gallery' }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [showImageSelector, setShowImageSelector] = useState(false);
+  const [showImagePreview, setShowImagePreview] = useState(false);
   const [storageImages, setStorageImages] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -65,7 +66,9 @@ export default function ImageUpload({ currentImageUrl, onImageSelect, className 
           <img 
             src={currentImageUrl} 
             alt="Imagen actual" 
-            className="w-full h-48 object-cover rounded-lg border"
+            className="w-full h-48 object-cover rounded-lg border cursor-pointer hover:opacity-90 transition-opacity"
+            onClick={() => setShowImagePreview(true)}
+            title="Click para ver en tamaño completo"
           />
           <div className="absolute top-2 right-2 flex gap-2">
             <button
@@ -124,39 +127,43 @@ export default function ImageUpload({ currentImageUrl, onImageSelect, className 
         disabled={isUploading}
       />
 
-      {/* Selector de imágenes del storage */}
+      {/* Selector de imágenes del storage - Lista simple sin previews */}
       {showImageSelector && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-4xl max-h-[80vh] overflow-auto">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold text-secondary">Seleccionar Imagen</h3>
               <button
+                type="button"
                 onClick={() => setShowImageSelector(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
               >
                 ✕
               </button>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {storageImages.map((imageUrl, index) => (
-                <div
-                  key={index}
-                  className="relative group cursor-pointer"
-                  onClick={() => handleImageSelect(imageUrl)}
-                >
-                  <img
-                    src={imageUrl}
-                    alt={`Imagen ${index + 1}`}
-                    className="w-full h-24 object-cover rounded-lg border hover:border-primary transition-colors"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity rounded-lg flex items-center justify-center">
-                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity">Seleccionar</span>
-                  </div>
-                </div>
-              ))}
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {storageImages.map((imageUrl, index) => {
+                // Extraer el nombre del archivo de la URL
+                const fileName = imageUrl.split('/').pop() || `Imagen ${index + 1}`;
+                
+                return (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => handleImageSelect(imageUrl)}
+                    className="w-full text-left px-4 py-3 border border-gray-200 rounded-lg hover:border-primary hover:bg-gray-50 transition-colors flex items-center gap-3"
+                  >
+                    <FaImage className="text-gray-400 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-gray-800 truncate">{fileName}</div>
+                      <div className="text-xs text-gray-500 truncate">{imageUrl}</div>
+                    </div>
+                  </button>
+                );
+              })}
               {storageImages.length === 0 && (
-                <div className="col-span-full text-center text-gray-500 py-8">
+                <div className="text-center text-gray-500 py-8">
                   No hay imágenes en la galería
                 </div>
               )}
@@ -171,6 +178,31 @@ export default function ImageUpload({ currentImageUrl, onImageSelect, className 
           <div className="bg-white rounded-lg p-6 text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
             <p className="text-gray-600">Subiendo imagen...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Overlay de vista previa completa */}
+      {showImagePreview && currentImageUrl && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowImagePreview(false)}
+        >
+          <div className="relative max-w-7xl max-h-full">
+            <button
+              type="button"
+              onClick={() => setShowImagePreview(false)}
+              className="absolute -top-12 right-0 text-white hover:text-gray-300 text-4xl font-bold"
+              title="Cerrar"
+            >
+              ✕
+            </button>
+            <img 
+              src={currentImageUrl} 
+              alt="Vista previa completa" 
+              className="max-w-full max-h-[90vh] object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
           </div>
         </div>
       )}

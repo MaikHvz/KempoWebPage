@@ -115,13 +115,20 @@ const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
       <MenuBar editor={editor} onImageUploadClick={() => setIsImageUploadOpen(true)} />
       <EditorContent editor={editor} />
       {isImageUploadOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg max-w-4xl w-full">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setIsImageUploadOpen(false)}
+        >
+          <div 
+            className="bg-white p-8 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h2 className="text-2xl font-bold mb-4">Seleccionar Imagen</h2>
             <ImageUpload onImageSelect={addImage} source="blog" />
             <button
+              type="button"
               onClick={() => setIsImageUploadOpen(false)}
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
             >
               Cerrar
             </button>
