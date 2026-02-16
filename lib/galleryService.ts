@@ -42,7 +42,6 @@ export const uploadImage = async (file: File): Promise<string | null> => {
 
     if (uploadError) {
       console.error('Error al subir imagen:', uploadError);
-      alert('Error al subir la imagen');
       return null;
     }
 
@@ -54,7 +53,6 @@ export const uploadImage = async (file: File): Promise<string | null> => {
     return publicUrl;
   } catch (error) {
     console.error('Error en uploadImage:', error);
-    alert('Error al procesar la imagen');
     return null;
   }
 };
@@ -65,7 +63,7 @@ export const deleteImage = async (imageUrl: string): Promise<boolean> => {
     // Extraer el path del URL
     const url = new URL(imageUrl);
     const path = url.pathname.split('/').pop();
-    
+
     if (!path) return false;
 
     const { error } = await supabase.storage

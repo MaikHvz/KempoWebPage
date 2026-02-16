@@ -104,16 +104,32 @@ export default function Header() {
               {/* User Menu or Login Button */}
               <li className="flex items-center">
                 {user ? (
-                  <div className="flex flex-col md:flex-row items-center gap-4">
-                    <span className="text-white font-semibold">
-                      Hola, {user.user_metadata.full_name || user.email?.split('@')[0]}
-                    </span>
-                    <button
-                      onClick={handleLogout}
-                      className="text-red-400 hover:text-red-300 font-medium text-sm border border-red-900/50 px-3 py-1 rounded-full transition-colors"
-                    >
-                      Cerrar Sesión
+                  <div className="relative group">
+                    <button className="flex items-center gap-2 text-white font-semibold hover:text-primary transition-colors py-2">
+                        <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm">
+                            {user.email?.charAt(0).toUpperCase()}
+                        </div>
+                        <span>Hola, {user.user_metadata.full_name?.split(' ')[0] || user.email?.split('@')[0]}</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
+                    
+                    {/* Dropdown Menu */}
+                    <div className="absolute right-0 mt-0 w-48 bg-white rounded-xl shadow-xl overflow-hidden hidden group-hover:block border border-gray-100 animate-in fade-in slide-in-from-top-2">
+                        <Link href="/profile" className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100">
+                            Mi Perfil
+                        </Link>
+                        {user.email === 'admin@kempo.cl' && ( // Simple check, ideally use role from metadata or profile
+                            <Link href="/admin/dashboard" className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100">
+                                Panel Admin
+                            </Link>
+                        )}
+                        <button
+                            onClick={handleLogout}
+                            className="block w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                            Cerrar Sesión
+                        </button>
+                    </div>
                   </div>
                 ) : (
                   <button

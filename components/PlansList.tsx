@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import AuthModal from './AuthModal'; // Fixed path
+import BeneficiaryModal from './BeneficiaryModal'; // Import new modal
 
 interface Plan {
   id: string;
@@ -16,8 +18,12 @@ interface Plan {
 export default function PlansList({ plans }: { plans: Plan[] }) {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
   const router = useRouter();
+  
+  // Modal States
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [beneficiaryModalOpen, setBeneficiaryModalOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -25,67 +31,74 @@ export default function PlansList({ plans }: { plans: Plan[] }) {
     });
   }, []);
 
-  const handleSubscribe = async (plan: Plan) => {
+  // 1. First Click: Check Auth & Open Beneficiary Modal
+  const handleSubscribeClick = (plan: Plan) => {
     if (!user) {
-      alert('Debes iniciar sesión para contratar un plan. Por favor, ingresa desde el botón "Acceso Alumnos" en el menú.');
+      alert('Debes iniciar sesión para contratar un plan.'); 
+      // Ideally trigger auth modal here if available via context or prop, usually strictly in Header but ok to alert for now
       return;
     }
+    setSelectedPlan(plan);
+    setBeneficiaryModalOpen(true);
+  };
 
-    if (!confirm(`¿Estás seguro de que quieres contratar el plan "${plan.name}"?`)) return;
+  // 2. Selection Made: Proceed to Payment
+  const handleBeneficiarySelect = async (beneficiaryId: string | null) => {
+    if (!selectedPlan) return;
+    setBeneficiaryModalOpen(false); // Close modal
+    
+    // Proceed with WebPay
+    initiateWebPay(selectedPlan, beneficiaryId);
+  };
 
+  const initiateWebPay = async (plan: Plan, beneficiaryId: string | null) => {
     setLoading(true);
     try {
-        // Calculate end date
-        const startDate = new Date();
-        const endDate = new Date(startDate);
-        endDate.setMonth(endDate.getMonth() + plan.duration_months);
+        const response = await fetch('/api/webpay/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                planId: plan.id,
+                beneficiaryId: beneficiaryId // Send the ID
+            }),
+        });
 
-        const { error } = await supabase
-            .from('student_subscriptions')
-            .insert([{
-                user_id: user.id,
-                membership_id: plan.id,
-                start_date: startDate.toISOString(),
-                end_date: endDate.toISOString(),
-                status: 'pending_payment',
-                payment_method: 'transfer' // Default for now until Stripe
-            }]);
+        const data = await response.json();
 
-        if (error) throw error;
+        if (!response.ok) {
+            throw new Error(data.error || 'Error iniciando pago');
+        }
 
-        setSuccessMsg(`¡Solicitud recibida! Para activar tu "${plan.name}", realiza la transferencia y envía el comprobante al instructor.`);
+        const form = document.createElement('form');
+        form.action = data.url;
+        form.method = 'POST';
         
-        // Scroll to top to see message
-        window.scrollTo(0,0);
+        const tokenInput = document.createElement('input');
+        tokenInput.type = 'hidden';
+        tokenInput.name = 'token_ws';
+        tokenInput.value = data.token;
+        
+        form.appendChild(tokenInput);
+        document.body.appendChild(form);
+        form.submit();
 
     } catch (err: any) {
-        alert('Error al contratar: ' + err.message);
-    } finally {
+        alert('Error al iniciar pago: ' + err.message);
         setLoading(false);
+        setSelectedPlan(null);
     }
   };
 
   return (
     <div className="py-12">
-        {successMsg && (
-            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-6 mb-8 rounded shadow-md animate-in slide-in-from-top">
-                <p className="font-bold text-lg mb-2">¡Plan Solicitado con Éxito!</p>
-                <p>{successMsg}</p>
-                <div className="mt-4 bg-white/50 p-4 rounded text-sm">
-                    <p className="font-semibold">Datos de Transferencia:</p>
-                    <p>Banco Estado</p>
-                    <p>Cuenta RUT: 12.345.678-9</p>
-                    <p>Nombre: Dojo Valenzuela</p>
-                    <p>Email: pagos@dojovalenzuela.cl</p>
-                </div>
-                <button 
-                    onClick={() => setSuccessMsg('')}
-                    className="mt-4 text-green-800 underline hover:text-green-900"
-                >
-                    Entendido, cerrar mensaje
-                </button>
-            </div>
-        )}
+        <BeneficiaryModal 
+            isOpen={beneficiaryModalOpen}
+            onClose={() => setBeneficiaryModalOpen(false)}
+            onSelect={handleBeneficiarySelect}
+            planName={selectedPlan?.name || ''}
+        />
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {plans.map((plan) => (
@@ -112,8 +125,8 @@ export default function PlansList({ plans }: { plans: Plan[] }) {
                 </div>
 
                 <button
-                    onClick={() => handleSubscribe(plan)}
-                    disabled={loading || !!successMsg}
+                    onClick={() => handleSubscribeClick(plan)}
+                    disabled={loading}
                     className="w-full bg-primary text-white py-4 rounded-xl font-bold uppercase tracking-wider hover:bg-black transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {loading ? 'Procesando...' : 'Contratar Plan'}

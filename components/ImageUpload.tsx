@@ -42,11 +42,13 @@ export default function ImageUpload({ currentImageUrl, onImageSelect, className 
   const loadStorageImages = async () => {
     setShowImageSelector(true);
     try {
-      const images = source === 'blog' ? await getAllStorageImages() : await getStorageImages('gallery');
+      // Both sources should list from root for now as uploadImage saves to root
+      // Or we can organize, but let's fix the immediate mismatch first.
+      const images = await getAllStorageImages();
       setStorageImages(images);
     } catch (error) {
       console.error('Error loading storage images:', error);
-      alert('Error al cargar imágenes');
+      // Removed alert to prevent freezing/crashing UX
     }
   };
 
