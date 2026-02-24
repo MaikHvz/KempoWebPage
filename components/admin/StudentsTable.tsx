@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { FaUserCircle, FaWhatsapp, FaCheckCircle, FaExclamationCircle, FaTimesCircle, FaChild, FaUser } from 'react-icons/fa';
+import { FaUserCircle, FaCheckCircle, FaExclamationCircle, FaTimesCircle, FaChild, FaSearch, FaFilter } from 'react-icons/fa';
 
 interface Subscription {
   id: string;
@@ -28,7 +28,12 @@ interface Subscription {
 export default function StudentsTable({ initialSubscriptions }: { initialSubscriptions: Subscription[] }) {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>(initialSubscriptions);
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
-  const [filter, setFilter] = useState('');
+  const [nameFilter, setNameFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'expired'>('all');
+  const [planFilter, setPlanFilter] = useState('all');
+
+  // Get unique plan names for the filter dropdown
+  const uniquePlans = Array.from(new Set(subscriptions.map(s => s.memberships?.name).filter(Boolean)));
 
   const handleApprovePayment = async (subscriptionId: string) => {
     if (!confirm('¿Confirmas que recibiste el pago para esta suscripción?')) return;
@@ -73,114 +78,181 @@ export default function StudentsTable({ initialSubscriptions }: { initialSubscri
   };
 
   const filteredSubs = subscriptions.filter(sub => {
-      const search = filter.toLowerCase();
+      // Name/email filter
+      const search = nameFilter.toLowerCase();
       const studentName = sub.beneficiaries?.full_name || sub.profiles?.full_name || '';
-      return studentName.toLowerCase().includes(search) || sub.profiles?.email?.toLowerCase().includes(search);
+      const matchesName = !search || studentName.toLowerCase().includes(search) || sub.profiles?.email?.toLowerCase().includes(search);
+      
+      // Status filter
+      const matchesStatus = statusFilter === 'all' || sub.status === statusFilter;
+      
+      // Plan filter
+      const matchesPlan = planFilter === 'all' || sub.memberships?.name === planFilter;
+
+      return matchesName && matchesStatus && matchesPlan;
   });
 
+  const activeCount = subscriptions.filter(s => s.status === 'active').length;
+  const expiredCount = subscriptions.filter(s => s.status === 'expired').length;
+
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-4 border-b border-gray-100">
-            <input 
-                type="text" 
-                placeholder="Buscar alumno..." 
-                className="w-full md:w-64 px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-            />
+    <div className="space-y-4">
+        {/* Summary counters */}
+        <div className="grid grid-cols-3 gap-4">
+            <button 
+                onClick={() => setStatusFilter('all')}
+                className={`p-4 rounded-2xl border text-center transition-all ${statusFilter === 'all' ? 'border-primary bg-primary/5 shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200'}`}
+            >
+                <p className="text-2xl font-bold text-gray-800">{subscriptions.length}</p>
+                <p className="text-xs text-gray-500 font-medium">Total Alumnos</p>
+            </button>
+            <button 
+                onClick={() => setStatusFilter('active')}
+                className={`p-4 rounded-2xl border text-center transition-all ${statusFilter === 'active' ? 'border-green-400 bg-green-50 shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200'}`}
+            >
+                <p className="text-2xl font-bold text-green-600">{activeCount}</p>
+                <p className="text-xs text-gray-500 font-medium">Al Día</p>
+            </button>
+            <button 
+                onClick={() => setStatusFilter('expired')}
+                className={`p-4 rounded-2xl border text-center transition-all ${statusFilter === 'expired' ? 'border-red-400 bg-red-50 shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200'}`}
+            >
+                <p className="text-2xl font-bold text-red-600">{expiredCount}</p>
+                <p className="text-xs text-gray-500 font-medium">Vencidos</p>
+            </button>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50 border-b border-gray-100">
-              <tr>
-                <th className="px-6 py-4 font-semibold text-gray-600">Alumno</th>
-                <th className="px-6 py-4 font-semibold text-gray-600">Estado</th>
-                <th className="px-6 py-4 font-semibold text-gray-600">Plan</th>
-                <th className="px-6 py-4 font-semibold text-gray-600">Vence</th>
-                <th className="px-6 py-4 font-semibold text-gray-600 text-right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {filteredSubs.length === 0 ? (
-                <tr>
-                   <td colSpan={5} className="p-8 text-center text-gray-500">
-                       No hay alumnos registrados aún.
-                   </td>
-                </tr>
-              ) : (
-                filteredSubs.map((sub) => {
-                  const isBeneficiary = !!sub.beneficiary_id;
-                  const name = isBeneficiary ? sub.beneficiaries?.full_name : sub.profiles?.full_name;
-                  const relationship = isBeneficiary ? sub.beneficiaries?.relationship : 'Titular';
-                  const avatar = sub.profiles?.avatar_url;
+        {/* Table with filters */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            {/* Filter bar */}
+            <div className="p-4 border-b border-gray-100 flex flex-col md:flex-row gap-3">
+                <div className="relative flex-1">
+                    <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+                    <input 
+                        type="text" 
+                        placeholder="Buscar por nombre o email..." 
+                        className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                        value={nameFilter}
+                        onChange={(e) => setNameFilter(e.target.value)}
+                    />
+                </div>
+                <div className="flex gap-3">
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value as any)}
+                        className="px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white"
+                    >
+                        <option value="all">Todos los estados</option>
+                        <option value="active">Al Día</option>
+                        <option value="expired">Vencidos</option>
+                    </select>
+                    <select
+                        value={planFilter}
+                        onChange={(e) => setPlanFilter(e.target.value)}
+                        className="px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm bg-white"
+                    >
+                        <option value="all">Todos los planes</option>
+                        {uniquePlans.map(plan => (
+                            <option key={plan} value={plan}>{plan}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
 
-                  return (
-                    <tr key={sub.id} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                            <div className="relative">
-                                {avatar ? (
-                                    <img src={avatar} alt={name || ''} className="w-10 h-10 rounded-full object-cover" />
-                                ) : (
-                                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                                        <FaUserCircle size={24} />
-                                    </div>
-                                )}
-                                {isBeneficiary && (
-                                    <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white rounded-full p-0.5 text-[8px] border-2 border-white" title="Beneficiario">
-                                        <FaChild size={8}/>
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <div className="font-bold text-gray-800">{name || 'Sin Nombre'}</div>
-                                <div className="text-xs text-gray-500 flex items-center gap-1">
-                                    {isBeneficiary ? (
-                                        <>
-                                            <span className="bg-blue-100 text-blue-700 px-1.5 rounded-[4px]">{relationship}</span>
-                                            <span>de {sub.profiles?.full_name}</span>
-                                        </>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-gray-50 border-b border-gray-100">
+                  <tr>
+                    <th className="px-6 py-4 font-semibold text-gray-600">Alumno</th>
+                    <th className="px-6 py-4 font-semibold text-gray-600">Estado</th>
+                    <th className="px-6 py-4 font-semibold text-gray-600">Plan</th>
+                    <th className="px-6 py-4 font-semibold text-gray-600">Vence</th>
+                    <th className="px-6 py-4 font-semibold text-gray-600 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {filteredSubs.length === 0 ? (
+                    <tr>
+                       <td colSpan={5} className="p-8 text-center text-gray-500">
+                           {nameFilter || statusFilter !== 'all' || planFilter !== 'all' 
+                               ? 'No se encontraron alumnos con los filtros seleccionados.' 
+                               : 'No hay alumnos registrados aún.'}
+                       </td>
+                    </tr>
+                  ) : (
+                    filteredSubs.map((sub) => {
+                      const isBeneficiary = !!sub.beneficiary_id;
+                      const name = isBeneficiary ? sub.beneficiaries?.full_name : sub.profiles?.full_name;
+                      const relationship = isBeneficiary ? sub.beneficiaries?.relationship : 'Titular';
+                      const avatar = sub.profiles?.avatar_url;
+
+                      return (
+                        <tr key={sub.id} className="hover:bg-gray-50/50 transition-colors">
+                            <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                                <div className="relative">
+                                    {avatar ? (
+                                        <img src={avatar} alt={name || ''} className="w-10 h-10 rounded-full object-cover" />
                                     ) : (
-                                        <span className="text-gray-400">Titular ({sub.profiles?.email})</span>
+                                        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                                            <FaUserCircle size={24} />
+                                        </div>
+                                    )}
+                                    {isBeneficiary && (
+                                        <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white rounded-full p-0.5 text-[8px] border-2 border-white" title="Beneficiario">
+                                            <FaChild size={8}/>
+                                        </div>
                                     )}
                                 </div>
+                                <div>
+                                    <div className="font-bold text-gray-800">{name || 'Sin Nombre'}</div>
+                                    <div className="text-xs text-gray-500 flex items-center gap-1">
+                                        {isBeneficiary ? (
+                                            <>
+                                                <span className="bg-blue-100 text-blue-700 px-1.5 rounded-[4px]">{relationship}</span>
+                                                <span>de {sub.profiles?.full_name}</span>
+                                            </>
+                                        ) : (
+                                            <span className="text-gray-400">Titular ({sub.profiles?.email})</span>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        </td>
-                        <td className="px-6 py-4">
-                            {getStatusBadge(sub.status)}
-                        </td>
-                        <td className="px-6 py-4">
-                            <div className="text-sm">
-                                <p className="font-semibold text-gray-700">{sub.memberships?.name || 'Plan Eliminado'}</p>
-                                <p className="text-xs text-gray-400">${sub.memberships?.price.toLocaleString('es-CL')}</p>
-                            </div>
-                        </td>
-                        <td className="px-6 py-4">
-                            <span className={`text-sm ${sub.status === 'expired' ? 'text-red-500 font-bold' : 'text-gray-600'}`}>
-                                {new Date(sub.end_date).toLocaleDateString()}
-                            </span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                           <div className="flex justify-end items-center gap-2">
-                               {sub.status === 'pending_payment' && (
-                                    <button 
-                                        onClick={() => handleApprovePayment(sub.id)}
-                                        disabled={loadingMap[sub.id]}
-                                        className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50"
-                                    >
-                                        {loadingMap[sub.id] ? '...' : 'Aprobar Pago'}
-                                    </button>
-                                )}
-                           </div>
-                        </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+                            </td>
+                            <td className="px-6 py-4">
+                                {getStatusBadge(sub.status)}
+                            </td>
+                            <td className="px-6 py-4">
+                                <div className="text-sm">
+                                    <p className="font-semibold text-gray-700">{sub.memberships?.name || 'Plan Eliminado'}</p>
+                                    <p className="text-xs text-gray-400">${sub.memberships?.price.toLocaleString('es-CL')}</p>
+                                </div>
+                            </td>
+                            <td className="px-6 py-4">
+                                <span className={`text-sm ${sub.status === 'expired' ? 'text-red-500 font-bold' : 'text-gray-600'}`}>
+                                    {new Date(sub.end_date).toLocaleDateString()}
+                                </span>
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                               <div className="flex justify-end items-center gap-2">
+                                   {sub.status === 'pending_payment' && (
+                                        <button 
+                                            onClick={() => handleApprovePayment(sub.id)}
+                                            disabled={loadingMap[sub.id]}
+                                            className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50"
+                                        >
+                                            {loadingMap[sub.id] ? '...' : 'Aprobar Pago'}
+                                        </button>
+                                    )}
+                               </div>
+                            </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
         </div>
     </div>
   );

@@ -13,20 +13,31 @@ interface Beneficiary {
 interface BeneficiaryModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSelect: (beneficiaryId: string | null) => void;
+    onSelect: (beneficiaryId: string | null, buyerName?: string) => void;
     planName: string;
 }
 
 export default function BeneficiaryModal({ isOpen, onClose, onSelect, planName }: BeneficiaryModalProps) {
     const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
     const [loading, setLoading] = useState(true);
-    const [view, setView] = useState<'list' | 'create'>('list');
+    const [view, setView] = useState<'list' | 'create' | 'forMe'>('list');
     const [newBen, setNewBen] = useState({ full_name: '', relationship: '', birth_date: '' });
     const [creating, setCreating] = useState(false);
+    const [buyerName, setBuyerName] = useState('');
 
     useEffect(() => {
         if (isOpen) {
             fetchBeneficiaries();
+            // Pre-fill buyer name with profile name
+            supabase.auth.getUser().then(({ data: { user } }) => {
+                if (user) {
+                    supabase.from('profiles').select('full_name').eq('id', user.id).single().then(({ data }) => {
+                        setBuyerName(data?.full_name || user.user_metadata?.full_name || '');
+                    });
+                }
+            });
+        } else {
+            setView('list');
         }
     }, [isOpen]);
 
@@ -88,7 +99,7 @@ export default function BeneficiaryModal({ isOpen, onClose, onSelect, planName }
                     {view === 'list' ? (
                         <div className="space-y-3">
                             <button 
-                                onClick={() => onSelect(null)}
+                                onClick={() => setView('forMe')}
                                 className="w-full flex items-center p-4 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-primary transition-all group"
                             >
                                 <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 group-hover:bg-primary group-hover:text-white transition-colors">
@@ -128,6 +139,42 @@ export default function BeneficiaryModal({ isOpen, onClose, onSelect, planName }
                             <button onClick={onClose} className="w-full text-center text-gray-400 text-sm mt-4 hover:text-gray-600">
                                 Cancelar
                             </button>
+                        </div>
+                    ) : view === 'forMe' ? (
+                        <div className="space-y-4">
+                            <p className="text-sm text-gray-600">Por favor ingresa tu nombre completo real. Este nombre aparecerá en tu membresía.</p>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
+                                <input 
+                                    type="text" 
+                                    required
+                                    placeholder="Ej: Juan Pérez González"
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-lg"
+                                    value={buyerName}
+                                    onChange={e => setBuyerName(e.target.value)}
+                                />
+                            </div>
+                            <div className="flex gap-3 pt-2">
+                                <button 
+                                    type="button" 
+                                    onClick={() => setView('list')}
+                                    className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors"
+                                >
+                                    Volver
+                                </button>
+                                <button 
+                                    onClick={() => {
+                                        if (!buyerName.trim()) {
+                                            alert('Por favor ingresa tu nombre completo.');
+                                            return;
+                                        }
+                                        onSelect(null, buyerName.trim());
+                                    }}
+                                    className="flex-1 bg-primary text-white py-3 rounded-xl font-bold hover:bg-black transition-colors"
+                                >
+                                    Continuar al Pago
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <form onSubmit={handleCreate} className="space-y-4">

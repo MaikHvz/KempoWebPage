@@ -15,7 +15,15 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { planId, beneficiaryId } = body; // Get beneficiaryId
+        const { planId, beneficiaryId, buyerName } = body;
+
+        // Update buyer's profile name if provided (from "Para Mí" flow)
+        if (buyerName && !beneficiaryId) {
+            await supabaseAdmin
+                .from('profiles')
+                .update({ full_name: buyerName })
+                .eq('id', user.id);
+        }
 
         // 1. Get Plan Details (Admin client ensures we can read even if something is off)
         const { data: plan, error: planError } = await supabaseAdmin

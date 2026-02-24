@@ -15,6 +15,7 @@ export default async function StudentsPage() {
         beneficiaries (full_name, relationship),
         memberships (name, price)
     `)
+    .in('status', ['active', 'expired'])
     .order('created_at', { ascending: false });
 
   if (error) {

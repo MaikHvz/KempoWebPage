@@ -38,6 +38,7 @@ export default function ProfilePage() {
             beneficiaries ( full_name, relationship )
         `)
         .eq('user_id', user.id)
+        .in('status', ['active', 'pending_payment'])
         .order('created_at', { ascending: false });
       setSubscriptions(subsData || []);
 
@@ -203,9 +204,10 @@ export default function ProfilePage() {
                                 <div className="text-right">
                                     <p className="font-bold text-gray-900">${pay.amount.toLocaleString('es-CL')}</p>
                                     <span className={`text-xs px-2 py-0.5 rounded-full ${
-                                        pay.status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                                        pay.status === 'paid' ? 'bg-green-100 text-green-700' : 
+                                        pay.status === 'failed' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
                                     }`}>
-                                        {pay.status === 'paid' ? 'Pagado' : 'Pendiente'}
+                                        {pay.status === 'paid' ? 'Pagado' : pay.status === 'failed' ? 'Fallido' : 'Pendiente'}
                                     </span>
                                 </div>
                             </div>

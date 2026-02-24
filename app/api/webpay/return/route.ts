@@ -10,52 +10,96 @@ async function processTransaction(request: Request, token: string) {
         const response = await tx.commit(token);
         console.log('Transbank Response:', response);
 
-        // 2. Update Database using Admin Client (Bypass RLS)
         const buyOrder = response.buy_order;
         const isApproved = response.status === 'AUTHORIZED' && response.response_code === 0;
+
+        // 2. AUDIT LOG - Registrar TODA transacción (aprobada o rechazada)
+        await supabaseAdmin.from('webpay_logs').insert({
+            buy_order: buyOrder,
+            token: token,
+            status: response.status,
+            response_code: response.response_code,
+            amount: response.amount,
+            raw_response: response
+        });
+
+        // 3. IDEMPOTENCIA - Verificar si ya fue procesado
+        const { data: existingPayment, error: fetchError } = await supabaseAdmin
+            .from('payments')
+            .select('id, subscription_id, amount, status, processed_at')
+            .ilike('notes', `%${buyOrder}%`)
+            .single();
+
+        if (fetchError) {
+            console.error('Error fetching payment:', fetchError);
+            return NextResponse.redirect(new URL(`/webpay/result?status=error&message=PaymentNotFound`, request.url));
+        }
+
+        // Si ya fue procesado exitosamente, redirigir sin hacer nada
+        if (existingPayment.status === 'paid' && existingPayment.processed_at) {
+            console.log('⚠️ Payment already processed, skipping. Order:', buyOrder);
+            return NextResponse.redirect(new URL(`/webpay/result?status=success&amount=${response.amount}&order=${buyOrder}`, request.url));
+        }
 
         console.log('Buy Order:', buyOrder);
         console.log('Is Approved:', isApproved);
 
         if (isApproved) {
-            // Find payment by BuyOrder
-            const { data: payment, error: fetchError } = await supabaseAdmin
-                .from('payments')
-                .select('subscription_id, id')
-                .ilike('notes', `%${buyOrder}%`)
-                .single();
-
-            console.log('Payment Found:', payment);
-            if (fetchError) console.error('Error fetching payment:', fetchError);
-
-            if (payment) {
-                // Activate Subscription
-                const { error: subError } = await supabaseAdmin
-                    .from('student_subscriptions')
-                    .update({ status: 'active' })
-                    .eq('id', payment.subscription_id);
-
-                if (subError) console.error('Error updating subscription:', subError);
-                else console.log('Subscription activated:', payment.subscription_id);
-
-                // Update Payment
-                const { error: payError } = await supabaseAdmin
-                    .from('payments')
-                    .update({
-                        status: 'paid',
-                        stripe_payment_id: token
-                    })
-                    .eq('id', payment.id);
-
-                if (payError) console.error('Error updating payment:', payError);
-                else console.log('Payment updated to paid:', payment.id);
-            } else {
-                console.error('CRITICAL: Payment record not found for order:', buyOrder);
+            // 4. VALIDACIÓN DE MONTO - Prevenir fraude
+            if (response.amount !== existingPayment.amount) {
+                console.error('🚨 FRAUD ALERT: Amount mismatch!', {
+                    expected: existingPayment.amount,
+                    received: response.amount,
+                    buyOrder: buyOrder
+                });
+                return NextResponse.redirect(new URL(`/webpay/result?status=error&message=InvalidAmount`, request.url));
             }
+
+            // 5. Activar Suscripción
+            const { error: subError } = await supabaseAdmin
+                .from('student_subscriptions')
+                .update({ status: 'active' })
+                .eq('id', existingPayment.subscription_id);
+
+            if (subError) {
+                console.error('Error updating subscription:', subError);
+                throw subError;
+            }
+            console.log('✅ Subscription activated:', existingPayment.subscription_id);
+
+            // 6. Actualizar Pago con timestamp de procesamiento
+            const { error: payError } = await supabaseAdmin
+                .from('payments')
+                .update({
+                    status: 'paid',
+                    stripe_payment_id: token,
+                    processed_at: new Date().toISOString()
+                })
+                .eq('id', existingPayment.id);
+
+            if (payError) {
+                console.error('Error updating payment:', payError);
+                throw payError;
+            }
+            console.log('✅ Payment updated to paid:', existingPayment.id);
 
             return NextResponse.redirect(new URL(`/webpay/result?status=success&amount=${response.amount}&order=${buyOrder}`, request.url));
         } else {
-            return NextResponse.redirect(new URL(`/webpay/result?status=failed&message=Rechazado`, request.url));
+            // Pago rechazado - marcar como fallido
+            await supabaseAdmin
+                .from('payments')
+                .update({
+                    status: 'failed',
+                    processed_at: new Date().toISOString()
+                })
+                .eq('id', existingPayment.id);
+
+            await supabaseAdmin
+                .from('student_subscriptions')
+                .update({ status: 'cancelled' })
+                .eq('id', existingPayment.subscription_id);
+
+            return NextResponse.redirect(new URL(`/webpay/result?status=failed&message=Rechazado&code=${response.response_code}`, request.url));
         }
 
     } catch (error: any) {

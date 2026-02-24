@@ -43,15 +43,15 @@ export default function PlansList({ plans }: { plans: Plan[] }) {
   };
 
   // 2. Selection Made: Proceed to Payment
-  const handleBeneficiarySelect = async (beneficiaryId: string | null) => {
+  const handleBeneficiarySelect = async (beneficiaryId: string | null, buyerName?: string) => {
     if (!selectedPlan) return;
     setBeneficiaryModalOpen(false); // Close modal
     
     // Proceed with WebPay
-    initiateWebPay(selectedPlan, beneficiaryId);
+    initiateWebPay(selectedPlan, beneficiaryId, buyerName);
   };
 
-  const initiateWebPay = async (plan: Plan, beneficiaryId: string | null) => {
+  const initiateWebPay = async (plan: Plan, beneficiaryId: string | null, buyerName?: string) => {
     setLoading(true);
     try {
         const response = await fetch('/api/webpay/create', {
@@ -61,7 +61,8 @@ export default function PlansList({ plans }: { plans: Plan[] }) {
             },
             body: JSON.stringify({ 
                 planId: plan.id,
-                beneficiaryId: beneficiaryId // Send the ID
+                beneficiaryId: beneficiaryId, // Send the ID
+                buyerName: buyerName // Send buyer's real name
             }),
         });
 
