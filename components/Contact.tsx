@@ -1,9 +1,28 @@
 'use client';
 
+import { useState } from 'react';
 import { FaWhatsapp, FaMapMarkerAlt, FaEnvelope, FaInstagram, FaFacebook } from 'react-icons/fa';
 import { contactWhatsApp } from '../utils';
+import { toast } from 'sonner';
 
 export default function Contact() {
+  const [nombre, setNombre] = useState('');
+  const [mensaje, setMensaje] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!nombre.trim()) {
+      toast.warning('Por favor ingresa tu nombre.');
+      return;
+    }
+    if (!mensaje.trim()) {
+      toast.warning('Por favor escribe un mensaje.');
+      return;
+    }
+    const whatsappMessage = `Hola mi nombre es ${nombre.trim()}. ${mensaje.trim()}`;
+    contactWhatsApp(whatsappMessage);
+  };
+
   return (
     <section id="contacto" className="py-24 bg-dark-gray text-white relative overflow-hidden">
       <div className="container mx-auto px-5 max-w-[1200px] relative z-10">
@@ -66,12 +85,18 @@ export default function Contact() {
                 </div>
             </div>
 
-            <form className="bg-white p-8 rounded-2xl text-secondary space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <form className="bg-white p-8 rounded-2xl text-secondary space-y-6" onSubmit={handleSubmit}>
                 <h3 className="text-2xl font-bold mb-2">Envíanos un Mensaje</h3>
                 <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
                         <label className="text-sm font-semibold text-gray-600">Nombre</label>
-                        <input type="text" className="w-full bg-light-gray border-none p-4 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="Tu nombre" />
+                        <input 
+                          type="text" 
+                          className="w-full bg-light-gray border-none p-4 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all" 
+                          placeholder="Tu nombre"
+                          value={nombre}
+                          onChange={(e) => setNombre(e.target.value)}
+                        />
                     </div>
                     <div className="space-y-2">
                         <label className="text-sm font-semibold text-gray-600">Teléfono</label>
@@ -80,7 +105,12 @@ export default function Contact() {
                 </div>
                 <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-600">Mensaje</label>
-                    <textarea className="w-full bg-light-gray border-none p-4 rounded-lg h-32 resize-none focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="¿En qué podemos ayudarte?"></textarea>
+                    <textarea 
+                      className="w-full bg-light-gray border-none p-4 rounded-lg h-32 resize-none focus:ring-2 focus:ring-primary outline-none transition-all" 
+                      placeholder="¿En qué podemos ayudarte?"
+                      value={mensaje}
+                      onChange={(e) => setMensaje(e.target.value)}
+                    ></textarea>
                 </div>
                 <button type="submit" className="w-full bg-primary text-white py-4 rounded-lg font-bold text-lg hover:bg-red-700 transition-colors shadow-lg cursor-pointer">
                     Enviar Mensaje
@@ -91,3 +121,4 @@ export default function Contact() {
     </section>
   );
 }
+

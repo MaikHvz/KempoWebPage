@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { FaGoogle, FaEnvelope, FaLock, FaTimes } from 'react-icons/fa';
+import { toast } from 'sonner';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -58,7 +59,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           },
         });
         if (error) throw error;
-        alert('¡Registro exitoso! Por favor, verifica tu correo.');
+        toast.success('¡Registro exitoso! Por favor, verifica tu correo.');
         onClose();
       }
     } catch (err: any) {

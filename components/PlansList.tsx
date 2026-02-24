@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import AuthModal from './AuthModal'; // Fixed path
 import BeneficiaryModal from './BeneficiaryModal'; // Import new modal
 
@@ -29,13 +30,24 @@ export default function PlansList({ plans }: { plans: Plan[] }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
     });
+
+    // Listen for auth changes (fixes login without reload issue)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   // 1. First Click: Check Auth & Open Beneficiary Modal
   const handleSubscribeClick = (plan: Plan) => {
     if (!user) {
-      alert('Debes iniciar sesión para contratar un plan.'); 
-      // Ideally trigger auth modal here if available via context or prop, usually strictly in Header but ok to alert for now
+      toast.warning('Debes iniciar sesión para contratar un plan.'); 
+      setAuthModalOpen(true);
       return;
     }
     setSelectedPlan(plan);
@@ -86,7 +98,7 @@ export default function PlansList({ plans }: { plans: Plan[] }) {
         form.submit();
 
     } catch (err: any) {
-        alert('Error al iniciar pago: ' + err.message);
+        toast.error('Error al iniciar pago: ' + err.message);
         setLoading(false);
         setSelectedPlan(null);
     }
@@ -94,6 +106,10 @@ export default function PlansList({ plans }: { plans: Plan[] }) {
 
   return (
     <div className="py-12">
+        <AuthModal 
+            isOpen={authModalOpen}
+            onClose={() => setAuthModalOpen(false)}
+        />
         <BeneficiaryModal 
             isOpen={beneficiaryModalOpen}
             onClose={() => setBeneficiaryModalOpen(false)}
@@ -147,3 +163,4 @@ function FaFistRaisedIcon() {
         </svg>
     )
 }
+

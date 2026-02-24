@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { FaUserPlus, FaUser, FaChild } from 'react-icons/fa';
+import { toast } from 'sonner';
 
 interface Beneficiary {
     id: string;
@@ -79,7 +80,7 @@ export default function BeneficiaryModal({ isOpen, onClose, onSelect, planName }
             setView('list');
             setNewBen({ full_name: '', relationship: '', birth_date: '' });
         } catch (error: any) {
-            alert('Error creando beneficiario: ' + error.message);
+            toast.error('Error creando beneficiario: ' + error.message);
         } finally {
             setCreating(false);
         }
@@ -165,7 +166,7 @@ export default function BeneficiaryModal({ isOpen, onClose, onSelect, planName }
                                 <button 
                                     onClick={() => {
                                         if (!buyerName.trim()) {
-                                            alert('Por favor ingresa tu nombre completo.');
+                                            toast.warning('Por favor ingresa tu nombre completo.');
                                             return;
                                         }
                                         onSelect(null, buyerName.trim());

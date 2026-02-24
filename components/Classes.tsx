@@ -1,6 +1,7 @@
 'use client';
 
 import { FaUsers, FaUser, FaLaptop, FaGift, FaMedal, FaWhatsapp } from 'react-icons/fa';
+import Link from 'next/link';
 import { contactWhatsApp } from '../utils';
 
 export default function Classes() {
@@ -35,12 +36,12 @@ export default function Classes() {
                     <h4 className="font-bold text-secondary mb-2">Horarios Disponibles:</h4>
                     <p className="text-sm text-gray-600">Lun-Vie: 18:00 - 21:00<br/>Sábados: 09:00 - 12:00</p>
                 </div>
-                <button 
-                    className="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors cursor-pointer"
-                    onClick={() => contactWhatsApp('¡Hola! Me interesa inscribirme en las Clases Presenciales del Dojo Valenzuela. ¿Podrían darme información sobre horarios y disponibilidad para una clase de prueba?')}
+                <Link 
+                    href="/planes"
+                    className="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors cursor-pointer block text-center"
                 >
                     Inscribirme Ahora
-                </button>
+                </Link>
             </div>
 
             {/* Clases Personalizadas */}
@@ -65,7 +66,7 @@ export default function Classes() {
                 </div>
                 <button 
                     className="w-full bg-transparent border-2 border-primary text-primary py-3 rounded-lg font-bold hover:bg-primary hover:text-white transition-colors cursor-pointer"
-                    onClick={() => contactWhatsApp('¡Hola! Me interesa tomar Clases Personalizadas en el Dojo Valenzuela. ¿Podrían darme información sobre disponibilidad, horarios y tarifas?')}
+                    onClick={() => contactWhatsApp('¡Hola! Me gustaría solicitar una clase personalizada. ¿Qué horarios tienen disponibles?')}
                 >
                     Consultar Disponibilidad
                 </button>
@@ -93,7 +94,7 @@ export default function Classes() {
                 </div>
                 <button 
                     className="w-full bg-transparent border-2 border-primary text-primary py-3 rounded-lg font-bold hover:bg-primary hover:text-white transition-colors cursor-pointer"
-                    onClick={() => contactWhatsApp('¡Hola! Me interesa probar las Clases Online del Dojo Valenzuela. ¿Podrían darme información sobre cómo funciona y si hay una clase de prueba gratuita?')}
+                    onClick={() => contactWhatsApp('¡Hola! Me gustaría solicitar una clase online. ¿Qué horarios tienen disponibles?')}
                 >
                     Probar Clase Gratis
                 </button>
@@ -123,12 +124,12 @@ export default function Classes() {
                     </div>
                 </div>
 
-                <button 
-                    className="bg-whatsapp text-white px-8 py-4 rounded-full font-bold text-lg hover:brightness-110 transition-all shadow-lg flex items-center justify-center gap-2 mx-auto cursor-pointer"
-                    onClick={() => contactWhatsApp('¡Hola! Estoy listo para comenzar mi transformación en el Dojo Valenzuela. ¿Podrían ayudarme a elegir la mejor modalidad de entrenamiento para mí?')}
+                <Link 
+                    href="/planes"
+                    className="bg-primary text-white px-8 py-4 rounded-full font-bold text-lg hover:brightness-110 transition-all shadow-lg flex items-center justify-center gap-2 mx-auto"
                 >
-                    <FaWhatsapp className="text-2xl" /> Inscribirme por WhatsApp
-                </button>
+                    Inscríbete aquí
+                </Link>
             </div>
         </div>
       </div>
